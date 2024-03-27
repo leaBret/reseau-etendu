@@ -1,0 +1,50 @@
+[
+    {
+        "hostname": "R01",
+        "ip": "172.16.100.126",
+        "device_type": "cisco_ios",
+        "username": "cisco",
+        "password": "cisco",
+        "site" : "LYON" 
+    },
+    {
+        "hostname": "R02",
+        "ip": "172.16.100.190",
+        "device_type": "cisco_ios",
+        "username": "cisco",
+        "password": "cisco",
+        "site" : "MARSEILLE" 
+    },
+    {
+        "hostname": "R03",
+        "ip": "172.16.100.254",
+        "device_type": "cisco_ios",
+        "username": "cisco",
+        "password": "cisco",
+        "site" : "PARIS" 
+    },
+    {
+        "hostname": "ESW1",
+        "ip": "172.16.100.125",
+        "device_type": "cisco_ios",
+        "username": "cisco",
+        "password": "cisco",
+        "site" : "LYON" 
+    },
+    {
+        "hostname": "ESW2",
+        "ip": "172.16.100.189",
+        "device_type": "cisco_ios",
+        "username": "cisco",
+        "password": "cisco",
+        "site" : "MARSEILLE"     
+    },
+    {
+        "hostname": "ESW3",
+        "ip": "172.16.100.253",
+        "device_type": "cisco_ios",
+        "username": "cisco",
+        "password": "cisco",
+        "site" : "PARIS"   
+    }
+]

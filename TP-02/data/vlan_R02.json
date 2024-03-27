@@ -1,0 +1,24 @@
+{
+    "interfaces":
+    [
+        {
+            "name": "g0/0",
+            "description":"Gateway interface"
+        },
+        {
+        "name": "g0/0.10",
+        "description": "Gateway interface for teacher LAN",
+        "ip": "172.16.30.254",
+        "mask": "255.255.255.0",
+        "vlan_id": "10"
+        },
+        {
+        "name": "g0/0.20",
+        "description": "Gateway interface for student LAN",
+        "ip": "172.16.40.254",
+        "mask": "255.255.255.0",
+        "vlan_id": "20"
+        }
+    ]
+}
+

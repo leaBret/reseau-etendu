@@ -1,0 +1,32 @@
+{% for vlan in vlans %}
+vlan {{ vlan.id }}
+name {{ vlan.name }}
+exit
+{% endfor %}
+
+{% for interface in interfaces %}
+
+{% if interface.vlan_mode == "trunk" %}
+interface {{ interface.name }}
+switchport mode {{ interface.vlan_mode }}
+switchport trunk allowed vlan add {{ interface.vlan_allowed|join(', ')  }}
+{% endif %}
+
+{% if interface.vlan_mode == "access" %}
+interface {{ interface.name }}
+switchport mode {{ interface.vlan_mode }}
+switchport access vlan {{ interface.vlan_id }}
+{% endif %}
+
+{% if interface.ip %}
+interface {{ interface.name }}
+ip address {{ interface.ip }} {{ interface.masque }}
+no shutdown
+{% endif %}
+
+
+no shutdown
+exit
+{% endfor %}
+end
+write

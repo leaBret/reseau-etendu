@@ -1,0 +1,15 @@
+{% for interface in interfaces %}
+interface {{ interface.name }}
+description {{ interface.description }}
+{% if 'vlan_id' in interface %}
+encapsulation dot1Q {{ interface.vlan_id }}
+{% endif %}
+ip address {{ interface.ip }} {{ interface.netmask }}
+{% if '.' in interface.name %}
+interface {{ interface.name.split('.')[0] }}
+no shutdown
+{% endif %}
+exit
+{% endfor %}
+end
+write
