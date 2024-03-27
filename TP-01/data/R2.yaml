@@ -1,0 +1,18 @@
+interfaces:
+  - name: "G2/0.10"
+    description: "Gateway for vlan 10"
+    vlan_id: "10"
+    ip: "172.16.50.254"
+    masque: "255.255.255.0"
+
+  - name: "G2/0.20"
+    description: "Gateway for vlan 20"
+    vlan_id: "20"
+    ip: "172.16.60.254"
+    masque: "255.255.255.0"
+
+  - name: "G2/0.99"
+    description: "Gateway for vlan 99"
+    vlan_id: "20"
+    ip: "172.16.100.254"
+    masque: "255.255.255.192"

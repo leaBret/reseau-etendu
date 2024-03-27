@@ -1,0 +1,32 @@
+{
+    "vlans":
+    [
+        {
+            "name":"vlan10",
+            "id":"10"
+        },
+        {
+            "name":"vlan20",
+            "id":"20"
+        }
+    ],
+    "interfaces":
+    [
+        {
+            "name":"f1/1",
+            "vlan_mode":"access",
+            "vlan_id":"10"
+
+        },
+        {
+            "name":"f1/2",
+            "vlan_mode":"access",
+            "vlan_id":"20"
+        },
+        {
+            "name":"f1/0",
+            "vlan_mode":"trunk",
+            "vlan_allowed":["10","20"]
+        }
+    ]
+}
