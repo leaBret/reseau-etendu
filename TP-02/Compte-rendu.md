@@ -821,6 +821,9 @@ def question_26(device):
 ```
 
 Le résulat est : 
+```sh
+{'show ip interface brief': 'Interface                  IP-Address      OK? Method Status                Protocol\nEthernet0/0                unassigned      YES NVRAM  administratively down down    \nGigabitEthernet0/0         unassigned      YES NVRAM  up                    up      \nGigabitEthernet0/0.10      172.16.10.254   YES NVRAM  up                    up      \nGigabitEthernet0/0.20      172.16.20.254   YES NVRAM  up                    up      \nGigabitEthernet0/0.99      172.16.100.126  YES NVRAM  up                    up      \nSerial1/0                  10.1.1.1        YES NVRAM  up                    up      \nSerial1/1                  10.1.3.1        YES NVRAM  up                    up      \nSerial1/2                  unassigned      YES NVRAM  administratively down down    \nSerial1/3                  unassigned      YES NVRAM  administratively down down    \nGigabitEthernet2/0         172.16.100.62   YES NVRAM  up                    up'}
+```
 
 ### 27) Quel est le format de sortie de la commande à la question précédente ? Quelle est la clé utilisée ?
 
@@ -828,9 +831,17 @@ La sortie est un dictionnaire. Sa clé est la commande rentré soit `show ip int
 
 ```python
 def question_27(device):
+    device.open()
+    output = device.cli(['show ip interface brief'])
     print(type(output))
+    device.close()
     pass
 
+```
+
+résultat :
+```sh
+<class 'dict'>
 ```
 
 ### 28) Quelle est la seconde méthode permettant de lire les données de configuration du routeur ? Affichez la table arp du routeur R1. Aidez-vous de la documentation napalm : NAPALM_doc
@@ -847,17 +858,27 @@ def question_28(device):
 ```
 
 résultat : 
-
+```sh
+[{'interface': 'GigabitEthernet0/0.10', 'mac': 'CA:01:0E:18:00:08', 'ip': '172.16.10.254', 'age': -1.0}, {'interface': 'GigabitEthernet0/0.20', 'mac': 'CA:01:0E:18:00:08', 'ip': '172.16.20.254', 'age': -1.0}, {'interface': 'GigabitEthernet2/0', 'mac': '00:50:79:66:68:04', 'ip': '172.16.100.1', 'age': 43.0}, {'interface': 'GigabitEthernet2/0', 'mac': '08:00:27:63:79:D8', 'ip': '172.16.100.2', 'age': 11.0}, {'interface': 'GigabitEthernet2/0', 'mac': 'CA:01:0E:18:00:38', 'ip': '172.16.100.62', 'age': -1.0}, {'interface': 'GigabitEthernet0/0.99', 'mac': 'CA:01:0E:18:00:08', 'ip': '172.16.100.126', 'age': -1.0}]
+```
 ### 29) Quel est le format de sortie de la commande à la question précédente ?
 
 La sortie est au format d’une liste de dictionnaires.
 
-```
+```python
 def question_29(device):
+    device.open()
+    output = device.get_arp_table()
     print(type(output))
+    device.close()
     pass
 ```
 
+resultat:
+
+```sh
+<class 'list'>
+```
 ### 30) Créez un fichier de config nommé loopback R01.conf dans le dossier config et copiez / collez le contenu suivant:
 
 ```conf
@@ -877,7 +898,7 @@ no shut
 
 def question_30(device):
     device.open()
-    with open('config/loopback R01.conf', 'r') as config_file:
+    with open('config/loopback_R01.conf', 'r') as config_file:
         config = config_file.read()
 
     device.load_merge_candidate(config=config)
@@ -891,7 +912,63 @@ def question_30(device):
 
 Configuration de R1 avant déploiement : 
 
+```sh
+R1#sh ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+Ethernet0/0                unassigned      YES NVRAM  administratively down down    
+GigabitEthernet0/0         unassigned      YES NVRAM  up                    up      
+GigabitEthernet0/0.10      172.16.10.254   YES NVRAM  up                    up      
+GigabitEthernet0/0.20      172.16.20.254   YES NVRAM  up                    up      
+GigabitEthernet0/0.99      172.16.100.126  YES NVRAM  up                    up      
+Serial1/0                  10.1.1.1        YES NVRAM  up                    up      
+Serial1/1                  10.1.3.1        YES NVRAM  up                    up      
+Serial1/2                  unassigned      YES NVRAM  administratively down down    
+Serial1/3                  unassigned      YES NVRAM  administratively down down    
+GigabitEthernet2/0         172.16.100.62   YES NVRAM  up                    up   
+```
 Configuration après déploiement :
+
+dans le terminal : 
+```sh
+Changements :
++interface loopback 1
++ip address 192.168.1.1 255.255.255.255
++description "interface loopback 1"
+-no shut
++interface loopback 2
++ip address 192.168.2.1 255.255.255.255
++description "interface loopback 2"
+-no shut
++interface loopback 3
++ip address 192.168.3.1 255.255.255.255
++description "interface loopback 3"
+-no shut
++interface loopback 4
++ip address 192.168.4.1 255.255.255.255
++description "interface loopback 4"
+-no shutend
+```
+et sur le routeur : 
+
+```sh
+R1#sh ip int br
+Interface                  IP-Address      OK? Method Status                Protocol
+Ethernet0/0                unassigned      YES NVRAM  administratively down down    
+GigabitEthernet0/0         unassigned      YES NVRAM  up                    up      
+GigabitEthernet0/0.10      172.16.10.254   YES NVRAM  up                    up      
+GigabitEthernet0/0.20      172.16.20.254   YES NVRAM  up                    up      
+GigabitEthernet0/0.99      172.16.100.126  YES NVRAM  up                    up      
+Serial1/0                  10.1.1.1        YES NVRAM  up                    up      
+Serial1/1                  10.1.3.1        YES NVRAM  up                    up      
+Serial1/2                  unassigned      YES NVRAM  administratively down down    
+Serial1/3                  unassigned      YES NVRAM  administratively down down    
+GigabitEthernet2/0         172.16.100.62   YES NVRAM  up                    up      
+Loopback1                  192.168.1.1     YES TFTP   up                    up      
+Loopback2                  192.168.2.1     YES TFTP   up                    up      
+Loopback3                  192.168.3.1     YES TFTP   up                    up      
+Loopback4                  192.168.4.1     YES TFTP   up                    up   
+```
+On voit que les loopbacks ont été configuré 
 
 #### b) Exécutez la commande show ip int brief sur le routeur R1 , que remarquez-vous sur la ligne des interfaces loopback 1 et loopback 2? Comment expliquer cette différence ?
 
@@ -991,6 +1068,32 @@ ospf:
 Génération des configurations : 
 
 ```python
+import yaml
+from jinja2 import Template, Environment,  FileSystemLoader
+
+env = Environment(loader=FileSystemLoader("templates"))
+
+def load_yaml_data_from_file(file_path):
+    try:
+        with open(file_path) as yaml_file:
+            data = yaml.safe_load(yaml_file)
+            print(data)
+        return data
+    except FileNotFoundError as e: 
+        print("Erreur, chemin de fichier introuvable", e)
+
+def render_network_config(template_name, data):
+
+    template = env.get_template(template_name)
+    print(template.render(data))
+    return template.render(data) 
+    pass
+
+def save_built_config(file_name, data):
+    with open(file_name, 'w') as f:
+        f.write(data)
+    pass
+
 def question_31():
     router_names = ['r01', 'r02', 'r03']
     for router_name in router_names:
@@ -1000,9 +1103,38 @@ def question_31():
     pass
 ```
 
+résultat : 
+Les trois fichiers ospf de configuration sont créer 
+
+config/ospf_r01.config
+
+```conf
+router ospf 1
+router-id 1.1.1.1
+
+    network 172.16.10.0 0.0.0.255 area 0  
+
+    network 10.1.3.0 0.0.0.3 area 0  
+
+    network 10.1.1.0 0.0.0.3 area 0  
+
+    network 172.16.20.0 0.0.0.255 area 0  
+
+    network 172.16.100.0 0.0.0.63 area 0  
+
+end
+write
+```
+
 ### 32) Déployez les configurations OSFP sur les routeurs R1, R2 et R3 (en une seule fois) depuis votre script python en utilisant les méthodes fournies par NAPALM. Pensez à sauvegarder vos déploiements
 
 ```python
+
+def get_inventory():
+    file_path = "inventory/hosts.json"
+    with open(file_path, "r") as file:
+        inventory_data = json.load(file)
+    return inventory_data
 
 def question_32():
 
@@ -1040,10 +1172,35 @@ def question_32():
 ```
 
 résulat : 
-
+```sh
+Changements proposés:
++router ospf 1
++router-id 1.1.1.1
++    network 172.16.10.0 0.0.0.255 area 0
++    network 10.1.3.0 0.0.0.3 area 0
++    network 10.1.1.0 0.0.0.3 area 0
++    network 172.16.20.0 0.0.0.255 area 0
++    network 172.16.100.0 0.0.0.63 area 0
+Changements proposés:
++router ospf 1
++router-id 2.2.2.2
++    network 172.16.30.0 0.0.0.255 area 0
++    network 172.16.40.0 0.0.0.255 area 0
++    network 172.16.100.64 0.0.0.63 area 0
++    network 10.1.2.0 0.0.0.3 area 0
++    network 10.1.1.0 0.0.0.3 area 0
+Changements proposés:
++router ospf 1
++router-id 3.3.3.3
++    network 172.16.50.0 0.0.0.255 area 0
++    network 172.16.60.0 0.0.0.255 area 0
++    network 172.16.100.192 0.0.0.63 area 0
++    network 10.1.2.0 0.0.0.3 area 0
++    network 10.1.3.0 0.0.0.3 area 0
+```
 ### 33) A ce stade si votre configuration est correcte les machines de chaque site peuvent communiquer les unes avec les autres . Testez également le fonctionnement du routage inter-vlan entre les différents sites
 
-Résulat : 
+Tout ping correctement
 
 ### 34) Développez une fonction permettant de créer un backup de chaque équipement réseau de l’infra à l’aide de la méthode get_config de napalm. Chaque backup devra être stocké dans le dossier config/backup
 
@@ -1074,4 +1231,185 @@ def question_34():
 
         device.close()
     pass
+```
+
+Les fichiers ont bien été créé dans config/backup
+
+exemple de R01.backup:
+
+```conf
+!
+upgrade fpd auto
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+!
+no aaa new-model
+ip source-route
+no ip icmp rate-limit unreachable
+ip cef
+!
+!
+!
+!
+no ip domain lookup
+ip domain name cpe.local
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username cisco privilege 15 password 0 cisco
+archive
+ log config
+  hidekeys
+! 
+!
+!
+!
+!
+ip tcp synwait-time 5
+ip ssh version 2
+ip scp server enable
+!
+!
+!
+!
+interface Loopback1
+ description "interface loopback 1"
+ ip address 192.168.1.1 255.255.255.255
+!
+interface Loopback2
+ description "interface loopback 2"
+ ip address 192.168.2.1 255.255.255.255
+!
+interface Loopback3
+ description "interface loopback 3"
+ ip address 192.168.3.1 255.255.255.255
+!
+interface Loopback4
+ description "interface loopback 4"
+ ip address 192.168.4.1 255.255.255.255
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ description "test"
+ no ip address
+ duplex full
+ speed 1000
+ media-type gbic
+ negotiation auto
+!
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 172.16.10.254 255.255.255.0
+!
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 172.16.20.254 255.255.255.0
+!
+interface GigabitEthernet0/0.99
+ description 'sub-interface for admin vlan access - set by paramiko'
+ encapsulation dot1Q 99
+ ip address 172.16.100.126 255.255.255.192
+!
+interface Serial1/0
+ ip address 10.1.1.1 255.255.255.252
+ serial restart-delay 0
+!
+interface Serial1/1
+ ip address 10.1.3.1 255.255.255.252
+ serial restart-delay 0
+!
+interface Serial1/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface GigabitEthernet2/0
+ ip address 172.16.100.62 255.255.255.192
+ negotiation auto
+!
+router ospf 1
+ router-id 1.1.1.1
+ log-adjacency-changes
+ network 10.1.1.0 0.0.0.3 area 0
+ network 10.1.3.0 0.0.0.3 area 0
+ network 172.16.10.0 0.0.0.255 area 0
+ network 172.16.20.0 0.0.0.255 area 0
+ network 172.16.100.0 0.0.0.63 area 0
+!
+ip forward-protocol nd
+ip route 172.16.100.128 255.255.255.192 Serial1/0
+ip route 172.16.100.192 255.255.255.192 Serial1/1
+no ip http server
+no ip http secure-server
+!
+!
+!
+no cdp log mismatch duplex
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+!
+end
 ```

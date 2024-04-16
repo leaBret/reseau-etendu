@@ -1,12 +1,38 @@
 import json
 from napalm import get_network_driver
+import yaml
+from jinja2 import Template, Environment,  FileSystemLoader
+
 
 def get_inventory():
+    file_path = "inventory/hosts.json"
+    with open(file_path, "r") as file:
+        inventory_data = json.load(file)
+    return inventory_data
+
+env = Environment(loader=FileSystemLoader("templates"))
+
+def load_yaml_data_from_file(file_path):
+    try:
+        with open(file_path) as yaml_file:
+            data = yaml.safe_load(yaml_file)
+            print(data)
+        return data
+    except FileNotFoundError as e: 
+        print("Erreur, chemin de fichier introuvable", e)
+
+def render_network_config(template_name, data):
+
+    template = env.get_template(template_name)
+    print(template.render(data))
+    return template.render(data) 
     pass
 
-
-def get_json_data_from_file(file):
+def save_built_config(file_name, data):
+    with open(file_name, 'w') as f:
+        f.write(data)
     pass
+
 
 def question_26(device):
     device.open()
@@ -17,8 +43,12 @@ def question_26(device):
 
 
 def question_27(device):
+    device.open()
+    output = device.cli(['show ip interface brief'])
     print(type(output))
+    device.close()
     pass
+    
 
 def question_28(device):
     device.open()
@@ -28,13 +58,16 @@ def question_28(device):
     pass
 
 def question_29(device):
+    device.open()
+    output = device.get_arp_table()
     print(type(output))
+    device.close()
     pass
 
 
 def question_30(device):
     device.open()
-    with open('config/loopback R01.conf', 'r') as config_file:
+    with open('config/loopback_R01.conf', 'r') as config_file:
         config = config_file.read()
 
     device.load_merge_candidate(config=config)
@@ -120,8 +153,8 @@ def question_34():
 if __name__ == "__main__":
     r01 = {
     'hostname':'172.16.100.126',
-    'username': cisco,
-    'password': cisco
+    'username': 'cisco',
+    'password': 'cisco'
     }
 
     driver = get_network_driver('ios')
