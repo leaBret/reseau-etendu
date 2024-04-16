@@ -1,0 +1,19 @@
+ospf:
+  process: 1
+  id: "2.2.2.2"
+  networks:
+    - ip: "172.16.30.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "172.16.40.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "172.16.100.64"
+      wildmask: "0.0.0.63"
+      area: "0"
+    - ip: "10.1.2.0"
+      wildmask: "0.0.0.3"
+      area: "0"
+    - ip: "10.1.1.0"
+      wildmask: "0.0.0.3"
+      area: "0" 

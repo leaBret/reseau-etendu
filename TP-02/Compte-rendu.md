@@ -789,3 +789,289 @@ on doit modifier le fichier hosts.json :
 Résultat : 
 
 Tous ce ping correctement
+
+## Automatisation avec Napalm
+
+pipenv install napalm
+
+### Créer une connection 
+
+```python
+from napalm import get_network_driver
+r01 = {
+'hostname':'172.16.100.126',
+'username': cisco,
+'password': cisco
+}
+driver = get_network_driver('ios')
+device = driver(**r01)
+device.open()
+```
+
+### 26) Quel est la méthode de l’objet device permettant d’envoyer une commande show ? Exécutez la commande permettant de récupérerl’état des interfaces du routeur R1
+ 
+```python
+def question_26(device):
+    device.open()
+    output = device.cli(['show ip interface brief'])
+    print(output)
+    device.close()
+    pass
+
+```
+
+Le résulat est : 
+
+### 27) Quel est le format de sortie de la commande à la question précédente ? Quelle est la clé utilisée ?
+
+La sortie est un dictionnaire. Sa clé est la commande rentré soit `show ip interface brie0`f et sa valeur la réponse avec les interfaces
+
+```python
+def question_27(device):
+    print(type(output))
+    pass
+
+```
+
+### 28) Quelle est la seconde méthode permettant de lire les données de configuration du routeur ? Affichez la table arp du routeur R1. Aidez-vous de la documentation napalm : NAPALM_doc
+
+Pour afficher la table ARO, on peut utiliser get_arp_table()
+
+```python
+def question_28(device):
+    device.open()
+    output = device.get_arp_table()
+    print(output)
+    device.close()
+    pass
+```
+
+résultat : 
+
+### 29) Quel est le format de sortie de la commande à la question précédente ?
+
+La sortie est au format d’une liste de dictionnaires.
+
+```
+def question_29(device):
+    print(type(output))
+    pass
+```
+
+### 30) Créez un fichier de config nommé loopback R01.conf dans le dossier config et copiez / collez le contenu suivant:
+
+```conf
+interface loopback 1
+ip address 192.168.1.1 255.255.255.255
+description "interface loopback 1"
+no shut
+interface loopback 2
+ip address 192.168.2.1 255.255.255.255
+description "interface loopback 2"
+no shut
+```
+
+#### a) Déployez la configuration depuis le script napalm en utilisant la methode load_merge_candidate et en prenant soin d’afficher les changements apportés avant de commit votre config sur le routeur R1. AIdez-vous de la documentation napalm: Napalm doc
+
+```python
+
+def question_30(device):
+    device.open()
+    with open('config/loopback R01.conf', 'r') as config_file:
+        config = config_file.read()
+
+    device.load_merge_candidate(config=config)
+    print("Changements :")
+    print(device.compare_config())
+
+    device.commit_config()
+    device.close()
+    pass
+```
+
+Configuration de R1 avant déploiement : 
+
+Configuration après déploiement :
+
+#### b) Exécutez la commande show ip int brief sur le routeur R1 , que remarquez-vous sur la ligne des interfaces loopback 1 et loopback 2? Comment expliquer cette différence ?
+
+Lookback 1 et 2 sont configurer avec NPAM donc par TFTP. Les autre sont configurer en NVRAM. On peut donc tracer les interface configurer avec npam et de façon plus classique. 
+
+### 31) Créez le template jinja2 pour une configuration OSPF et la structure de données pour chaque routeur (R1, R2 et R3) permettant de générer la configuration du backbone OSPF en utilisant les données du tableau ci-dessous.
+
+template/ospf.j2 
+
+```j2
+router ospf {{ ospf.process }}
+router-id {{ ospf.id }}
+{% for network in ospf.networks %}
+    network {{ network.ip }} {{ network.wildmask }} area {{ network.area }}  
+{% endfor %}
+end
+write
+
+```
+
+
+ data/ospf_r01.yaml :
+
+ ```yaml
+
+ospf:
+  process: 1
+  id: "1.1.1.1"
+  networks:
+    - ip: "172.16.10.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "10.1.3.0"
+      wildmask: "0.0.0.3"
+      area: "0"
+    - ip: "10.1.1.0"
+      wildmask: "0.0.0.3"
+      area: "0"  
+    - ip: "172.16.20.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "172.16.100.0"
+      wildmask: "0.0.0.63"
+      area: "0"
+```
+
+ data/ospf_r02.yaml :
+
+ ```yaml
+ospf:
+  process: 1
+  id: "2.2.2.2"
+  networks:
+    - ip: "172.16.30.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "172.16.40.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "172.16.100.64"
+      wildmask: "0.0.0.63"
+      area: "0"
+    - ip: "10.1.2.0"
+      wildmask: "0.0.0.3"
+      area: "0"
+    - ip: "10.1.1.0"
+      wildmask: "0.0.0.3"
+      area: "0" 
+```
+
+
+ data/ospf_r03.yaml :
+
+ ```yaml
+
+ospf:
+  process: 1
+  id: "3.3.3.3"
+  networks:
+    - ip: "172.16.50.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "172.16.60.0"
+      wildmask: "0.0.0.255"
+      area: "0"
+    - ip: "172.16.100.192"
+      wildmask: "0.0.0.63"
+      area: "0"
+    - ip: "10.1.2.0"
+      wildmask: "0.0.0.3"
+      area: "0"
+    - ip: "10.1.3.0"
+      wildmask: "0.0.0.3"
+      area: "0" 
+```
+
+Génération des configurations : 
+
+```python
+def question_31():
+    router_names = ['r01', 'r02', 'r03']
+    for router_name in router_names:
+        data = load_yaml_data_from_file(file_path=f'data/ospf_{router_name}.yaml')
+        config = render_network_config(template_name='ospf.j2', data=data)
+        save_built_config(f'config/ospf_{router_name}.config', config)
+    pass
+```
+
+### 32) Déployez les configurations OSFP sur les routeurs R1, R2 et R3 (en une seule fois) depuis votre script python en utilisant les méthodes fournies par NAPALM. Pensez à sauvegarder vos déploiements
+
+```python
+
+def question_32():
+
+    hosts = get_inventory()
+
+    for i in hosts :
+        if i['hostname'].startswith(("R01","R02","R03")):
+            
+            ri = {
+                    'hostname': i['ip'],
+                    'username': i['username'],
+                    'password': i['password']
+            }
+
+            driver = get_network_driver('ios')
+            device  = driver(**ri)
+
+            device.open()
+
+            # Charger le contenu du fichier de configuration dans une variable
+            with open(f'config/ospf_{i["hostname"].lower()}.config', 'r') as config_file:
+                config = config_file.read()
+
+            device.load_merge_candidate(config=config)
+
+            # Afficher les changements proposés
+            print("Changements proposés:")
+            print(device.compare_config())
+
+            device.commit_config()
+
+            # Fermer la session avec le périphérique
+            device.close()
+    pass
+```
+
+résulat : 
+
+### 33) A ce stade si votre configuration est correcte les machines de chaque site peuvent communiquer les unes avec les autres . Testez également le fonctionnement du routage inter-vlan entre les différents sites
+
+Résulat : 
+
+### 34) Développez une fonction permettant de créer un backup de chaque équipement réseau de l’infra à l’aide de la méthode get_config de napalm. Chaque backup devra être stocké dans le dossier config/backup
+
+```python
+def question_34():
+
+    hosts = get_inventory()
+
+    for i in hosts :
+            
+        ri = {
+                'hostname': i['ip'],
+                'username': i['username'],
+                'password': i['password']
+        }
+
+        driver = get_network_driver('ios')
+        device  = driver(**ri)
+
+        device.open()
+
+        data = device.get_config('running')
+
+        with open(f'config/backup/{i["hostname"]}.backup', 'w') as f:
+            f.write(data['running'])
+
+        print('enregistrement effectué')
+
+        device.close()
+    pass
+```
