@@ -1,0 +1,19 @@
+{% for vlan in vlans %}
+vlan {{vlan.id}}
+    name {{vlan.name}}
+    exit
+{%- endfor %}
+{% for interface in interfaces %}
+{% if 'trunk' == interface.mode %}
+interface {{ interface.name }}
+    switchport mode {{interface.mode}}
+    switchport {{interface.mode}} allowed vlan {{interface.allowed_vlan}}
+    exit
+{%- else %}
+interface {{ interface.name }}
+    switchport mode {{interface.mode}}
+    switchport {{interface.mode}} vlan {{interface.vlan_id}}
+    description "{{ interface.description | default("**NO DESCRIPTION**") }}"
+    exit
+{%- endif -%}
+{%- endfor -%}

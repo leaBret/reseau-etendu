@@ -1,0 +1,11 @@
+{%- for interface in interfaces %}
+{% if 'g2/0' != interface.name and 'g3/0' != interface.name  %}
+interface {{ interface.name }}
+    vrrp {{interface.vrrp_id}} ip {{interface.vrrp_vip}}
+    vrrp {{interface.vrrp_id}}  priority {{interface.vrrp_priority}}
+    {%- if 'master' == interface.vrrp_role %}
+    vrrp {{interface.vrrp_id}} preempt
+    exit
+    {%- endif -%}
+{% endif %}
+{%- endfor %}

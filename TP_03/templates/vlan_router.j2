@@ -1,0 +1,19 @@
+{%- for interface in interfaces %}
+{%- if "g2/0" == interface.name %}
+interface {{ interface.name }}
+    no shutdown
+    exit
+    
+{%- elif "3/0" == interface.name %}
+interface {{ interface.name }}
+    no shutdown
+    exit
+
+{%- else %}
+interface {{ interface.name }}
+    encapsulation dot1Q {{interface.vlan_id}}
+    description "{{ interface.description | default("**NO DESCRIPTION**") }}"
+    ip address {{ interface.ip }} {{ interface.mask }}
+    exit
+{% endif %}
+{%- endfor %}

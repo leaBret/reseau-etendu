@@ -1,0 +1,73 @@
+R1-CPE-BAT-A:
+  hostname: 172.16.100.125
+  port: 22
+  groups:
+    - ios
+  data: # Anything under this key is custom data
+    device_name: R1-CPE-BAT-A
+    device_type: router
+    device_model: C7200
+    locality: lyon
+    building: A
+    room: '001'
+
+R2-CPE-BAT-A:
+  hostname: 172.16.100.126
+  port: 22
+  groups:
+    - ios
+  data: # Anything under this key is custom data
+    device_name: R2-CPE-BAT-A
+    device_type: router
+    device_model: C7200
+    locality: lyon
+    building: A
+
+ESW1-CPE-BAT-A:
+  hostname: 172.16.100.123
+  port: 22
+  groups:
+    - ios
+  data: # Anything under this key is custom data
+    device_name: ESW1-CPE-BAT-A
+    device_type: router_switch
+    device_model: C3725
+    locality: lyon
+    building: A
+
+
+R1-CPE-BAT-B:
+  hostname: 172.16.100.189
+  port: 22
+  groups:
+    - ios
+  data: # Anything under this key is custom data
+    device_name: R1-CPE-BAT-B
+    device_type: router
+    device_model: C7200
+    locality: lyon
+    building: B
+
+R2-CPE-BAT-B:
+  hostname: 172.16.100.190
+  port: 22
+  groups:
+    - ios
+  data: # Anything under this key is custom data
+    device_name: R2-CPE-BAT-B
+    device_type: router
+    device_model: C7200
+    locality: lyon
+    building: B
+
+ESW1-CPE-BAT-B:
+  hostname: 172.16.100.187
+  port: 22
+  groups:
+    - ios
+  data: # Anything under this key is custom data
+    device_name: ESW1-CPE-BAT-B
+    device_type: router_switch
+    device_model: C3725
+    locality: lyon
+    building: B

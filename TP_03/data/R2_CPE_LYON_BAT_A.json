@@ -1,0 +1,30 @@
+{
+    "interfaces":[
+        {
+            "name": "g2/0"
+        },
+        {
+            "name": "g2/0.10",
+            "description":"Gateway for teacher vlan",
+            "ip":"172.16.10.254",
+            "mask":"255.255.255.0",
+            "vlan_id":"10",
+            "vrrp_id":"10",
+            "vrrp_vip":"172.16.10.252",
+            "vrrp_priority":"110",
+            "vrrp_role":"master"
+
+        },
+        {
+            "name": "g2/0.20",
+            "description":"Gateway for student vlan",
+            "ip":"172.16.20.254",
+            "mask":"255.255.255.0",
+            "vlan_id":"20",
+            "vrrp_id":"20",
+            "vrrp_vip":"172.16.20.252",
+            "vrrp_priority":"110",
+            "vrrp_role":"master"
+        }
+    ]
+}
