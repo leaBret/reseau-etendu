@@ -27,41 +27,59 @@ def save_built_config(file_name, data):
 
 
 def create_config_cpe_lyon_batA():
-
-    config={}
-
-    data = load_json_data_from_file(file_path=f'data/R1_CPE_LYON_BAT_A.json')
-    config_r1_cpe_bat_lyon_a = render_network_config(template_name='vlan_router.j2', data=data)
-    config['r1']= config_r1_cpe_bat_lyon_a
-
-    data = load_json_data_from_file(file_path=f'data/R2_CPE_LYON_BAT_A.json')
-    config_r2_cpe_bat_lyon_a = render_network_config(template_name='vlan_router.j2', data=data)
-    config['r2']= config_r2_cpe_bat_lyon_a
-
-    data = load_json_data_from_file(file_path=f'data/ESW1_CPE_LYON_BAT_A.json')
-    config_esw1_cpe_bat_lyon_a = render_network_config(template_name='vlan_switch.j2', data=data)
-    config['esw1']= config_esw1_cpe_bat_lyon_a
-
-    return config
    
+    config = {}
 
+    print("######### R1_CPE_LYON_BAT_A")
+    r1_data_batA = load_json_data_from_file(file_path='data/R1_CPE_LYON_BAT_A.json')
+    r1_config_batA = render_network_config(template_name='vlan_router.j2', data=r1_data_batA)
+    r1_vrrp_config_batA  = render_network_config(template_name='vrrp_router.j2', data=r1_data_batA)
+
+    r1 = r1_config_batA + "\n\n" + r1_vrrp_config_batA
+    config['r1'] = r1
+
+    print("######### ESW1_CPE_LYON_BAT_A")
+    esw1_data_batA = load_json_data_from_file(file_path='data/ESW1_CPE_LYON_BAT_A.json')
+    esw1 = render_network_config(template_name='vlan_switch.j2', data=esw1_data_batA)
+    config['esw1'] = esw1
+
+    print("######### R2_CPE_LYON_BAT_A")
+    r2_data_batA = load_json_data_from_file(file_path='data/R2_CPE_LYON_BAT_A.json')
+    r2_config_batA = render_network_config(template_name='vlan_router.j2', data=r2_data_batA)
+    r2_vrrp_config_batA = render_network_config(template_name='vrrp_router.j2', data=r2_data_batA)
+
+    r2 = r2_config_batA + "\n\n" + r2_vrrp_config_batA
+    config['r2'] = r2
+    return config
+    pass
+    
 
 def create_config_cpe_lyon_batB():
-    config={}
+    config = {}
 
-    data = load_json_data_from_file(file_path=f'data/R1_CPE_LYON_BAT_B.json')
-    config_r1_cpe_bat_lyon_b = render_network_config(template_name='vlan_router.j2', data=data)
-    config['r1']= config_r1_cpe_bat_lyon_b
+    print("######### R1_CPE_LYON_BAT_B")
+    r1_data_batB = load_json_data_from_file(file_path='data/R1_CPE_LYON_BAT_B.json')
+    r1_config_batB = render_network_config(template_name='vlan_router.j2', data=r1_data_batB)
+    r1_config_batB = render_network_config(template_name='vlan_router.j2', data=r1_data_batB)
+    r1_vrrp_config_batB  = render_network_config(template_name='vrrp_router.j2', data=r1_data_batB)
 
-    data = load_json_data_from_file(file_path=f'data/R2_CPE_LYON_BAT_B.json')
-    config_r2_cpe_bat_lyon_b = render_network_config(template_name='vlan_router.j2', data=data)
-    config['r2']= config_r2_cpe_bat_lyon_b
+    r1 = r1_config_batB + "\n\n" + r1_vrrp_config_batB
+    config['r1'] = r1
 
-    data = load_json_data_from_file(file_path=f'data/ESW1_CPE_LYON_BAT_B.json')
-    config_esw1_cpe_bat_lyon_b = render_network_config(template_name='vlan_switch.j2', data=data)
-    config['esw1']= config_esw1_cpe_bat_lyon_b
+    print("######### ESW1_CPE_LYON_BAT_B")
+    esw1_data_batB = load_json_data_from_file(file_path='data/ESW1_CPE_LYON_BAT_B.json')
+    esw1 = render_network_config(template_name='vlan_switch.j2', data=esw1_data_batB)
+    config['esw1'] = esw1
 
+    print("######### R2_CPE_LYON_BAT_B")
+    r2_data_batB = load_json_data_from_file(file_path='data/R2_CPE_LYON_BAT_B.json')
+    r2_config_batB = render_network_config(template_name='vlan_router.j2', data=r2_data_batB)
+    r2_vrrp_config_batB = render_network_config(template_name='vrrp_router.j2', data=r2_data_batB)
+
+    r2 = r2_config_batB + "\n\n" + r2_vrrp_config_batB
+    config['r2'] = r2
     return config
+    pass
     
 if __name__ == "__main__":
     """

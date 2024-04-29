@@ -1,0 +1,13 @@
+ospf:
+    number: 1
+    id: "1.1.1.1"
+    networks:
+      - name: "172.16.10.0"
+        wildmask: "0.0.0.255"
+        area: "0"
+      - name: "172.16.20.0"
+        wildmask: "0.0.0.255"
+        area: "0"
+      - name: "10.1.1.0"
+        wildmask: "0.0.0.3"
+        area: "0"

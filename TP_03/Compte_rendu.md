@@ -1246,3 +1246,409 @@ Building configuration...
 R2-CPE-BAT-A#
 ^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
+
+### 39) Reprenez la première partie du TP afin de déployer les configurations générées sur les équipements du bâtiment A et B (vlan, routage inter-vlan, vrrp pour les vlans 10 et 20. Vous avez le choix d’utiliser nornir_netmiko ou nornir_napalm (ou les deux) pour le déploiement de la configuration. Pensez à sauvegarder automatiquement (depuis nornir) vos configurations après le déploiement. Aidez-vous de la doc de nornir_napalm et nornir_netmiko pour le déploiement de config via un fichier de conf.
+
+Pour create_config : 
+```python
+def create_config_cpe_lyon_batA():
+   
+    config = {}
+
+    print("######### R1_CPE_LYON_BAT_A")
+    r1_data_batA = load_json_data_from_file(file_path='data/R1_CPE_LYON_BAT_A.json')
+    r1_config_batA = render_network_config(template_name='vlan_router.j2', data=r1_data_batA)
+    r1_vrrp_config_batA  = render_network_config(template_name='vrrp_router.j2', data=r1_data_batA)
+
+    r1 = r1_config_batA + "\n\n" + r1_vrrp_config_batA
+    config['r1'] = r1
+
+    print("######### ESW1_CPE_LYON_BAT_A")
+    esw1_data_batA = load_json_data_from_file(file_path='data/ESW1_CPE_LYON_BAT_A.json')
+    esw1 = render_network_config(template_name='vlan_switch.j2', data=esw1_data_batA)
+    config['esw1'] = esw1
+
+    print("######### R2_CPE_LYON_BAT_A")
+    r2_data_batA = load_json_data_from_file(file_path='data/R2_CPE_LYON_BAT_A.json')
+    r2_config_batA = render_network_config(template_name='vlan_router.j2', data=r2_data_batA)
+    r2_vrrp_config_batA = render_network_config(template_name='vrrp_router.j2', data=r2_data_batA)
+
+    r2 = r2_config_batA + "\n\n" + r2_vrrp_config_batA
+    config['r2'] = r2
+    return config
+    pass
+    
+
+def create_config_cpe_lyon_batB():
+    config = {}
+
+    print("######### R1_CPE_LYON_BAT_B")
+    r1_data_batB = load_json_data_from_file(file_path='data/R1_CPE_LYON_BAT_B.json')
+    r1_config_batB = render_network_config(template_name='vlan_router.j2', data=r1_data_batB)
+    r1_config_batB = render_network_config(template_name='vlan_router.j2', data=r1_data_batB)
+    r1_vrrp_config_batB  = render_network_config(template_name='vrrp_router.j2', data=r1_data_batB)
+
+    r1 = r1_config_batB + "\n\n" + r1_vrrp_config_batB
+    config['r1'] = r1
+
+    print("######### ESW1_CPE_LYON_BAT_B")
+    esw1_data_batB = load_json_data_from_file(file_path='data/ESW1_CPE_LYON_BAT_B.json')
+    esw1 = render_network_config(template_name='vlan_switch.j2', data=esw1_data_batB)
+    config['esw1'] = esw1
+
+    print("######### R2_CPE_LYON_BAT_B")
+    r2_data_batB = load_json_data_from_file(file_path='data/R2_CPE_LYON_BAT_B.json')
+    r2_config_batB = render_network_config(template_name='vlan_router.j2', data=r2_data_batB)
+    r2_vrrp_config_batB = render_network_config(template_name='vrrp_router.j2', data=r2_data_batB)
+
+    r2 = r2_config_batB + "\n\n" + r2_vrrp_config_batB
+    config['r2'] = r2
+    return config
+    pass
+```
+
+et pour run_nornir : 
+
+```python
+
+def question_39(nr):
+    for host in nr.inventory.hosts:
+        filename = list(host.split("-"))
+        filename.insert(2, "LYON")
+        filename = "_".join(filename)
+        filename = f"config/{filename}.conf"
+    
+        with open(filename, 'r') as f:
+            config_commands = f.readlines()
+        result = nr.filter(device_name=host).run(task=netmiko_send_config, config_commands=config_commands) 
+        print_result(result)
+        result = nr.filter(device_name=host).run(task=netmiko_save_config) 
+        print_result(result)
+    pass
+
+def question_39_d(nr):
+        
+    print('Avant shut interfaces')
+    router_hosts = nr.filter(device_type="router")
+    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
+    print_result(result)
+
+    print("On shut les interface des master\n")
+    commands_BAT_B = [
+        "interface GigabitEthernet3/0",  
+        "shutdown",
+    ]
+    commands_BAT_A = [
+        "interface GigabitEthernet2/0",  
+        "shutdown",
+    ]
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_send_config, config_commands=commands_BAT_A)
+    result = nr.filter(device_name="R2-CPE-BAT-B").run(task=netmiko_send_config, config_commands=commands_BAT_B)
+
+    print('Après shut interfaces')
+    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
+    print_result(result)
+
+    pass
+```
+
+résultat : 
+```sh
+cpe@cpe-VirtualBox:~/LEA/reseau-etendu/reseau-etendu/TP_03$ python3 -m scripts.run_nornir
+netmiko_send_config*************************************************************
+* R1-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1-CPE-BAT-A(config)#
+R1-CPE-BAT-A(config)#interface g2/0
+R1-CPE-BAT-A(config-if)#    no shutdown
+R1-CPE-BAT-A(config-if)#    exit
+R1-CPE-BAT-A(config)#interface g2/0.10
+R1-CPE-BAT-A(config-subif)#    encapsulation dot1Q 10
+R1-CPE-BAT-A(config-subif)#    description "Gateway for teacher vlan"
+R1-CPE-BAT-A(config-subif)#    ip address 172.16.10.253 255.255.255.0
+R1-CPE-BAT-A(config-subif)#    exit
+R1-CPE-BAT-A(config)#
+R1-CPE-BAT-A(config)#interface g2/0.20
+R1-CPE-BAT-A(config-subif)#    encapsulation dot1Q 20
+R1-CPE-BAT-A(config-subif)#    description "Gateway for student vlan"
+R1-CPE-BAT-A(config-subif)#    ip address 172.16.20.253 255.255.255.0
+R1-CPE-BAT-A(config-subif)#    exit
+R1-CPE-BAT-A(config)#end
+R1-CPE-BAT-A#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_save_config*************************************************************
+* R1-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+R1-CPE-BAT-A#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_send_config*************************************************************
+* R2-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R2-CPE-BAT-A(config)#
+R2-CPE-BAT-A(config)#interface g2/0
+R2-CPE-BAT-A(config-if)#    no shutdown
+R2-CPE-BAT-A(config-if)#    exit
+R2-CPE-BAT-A(config)#interface g2/0.10
+R2-CPE-BAT-A(config-subif)#    encapsulation dot1Q 10
+R2-CPE-BAT-A(config-subif)#    description "Gateway for teacher vlan"
+R2-CPE-BAT-A(config-subif)#    ip address 172.16.10.254 255.255.255.0
+R2-CPE-BAT-A(config-subif)#    exit
+R2-CPE-BAT-A(config)#
+R2-CPE-BAT-A(config)#interface g2/0.20
+R2-CPE-BAT-A(config-subif)#    encapsulation dot1Q 20
+R2-CPE-BAT-A(config-subif)#    description "Gateway for student vlan"
+R2-CPE-BAT-A(config-subif)#    ip address 172.16.20.254 255.255.255.0
+R2-CPE-BAT-A(config-subif)#    exit
+R2-CPE-BAT-A(config)#end
+R2-CPE-BAT-A#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_save_config*************************************************************
+* R2-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+R2-CPE-BAT-A#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_send_config*************************************************************
+* ESW1-CPE-BAT-A ** changed : True *********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+ESW1-CPE-BAT-A(config)#
+ESW1-CPE-BAT-A(config)#vlan 10
+ESW1-CPE-BAT-A(config-vlan)#    name teacher
+ESW1-CPE-BAT-A(config-vlan)#    exit
+ESW1-CPE-BAT-A(config)#vlan 20
+ESW1-CPE-BAT-A(config-vlan)#    name student
+ESW1-CPE-BAT-A(config-vlan)#    exit
+ESW1-CPE-BAT-A(config)#
+ESW1-CPE-BAT-A(config)#
+ESW1-CPE-BAT-A(config)#interface fa1/14
+ESW1-CPE-BAT-A(config-if)#    switchport mode trunk
+ESW1-CPE-BAT-A(config-if)#    switchport trunk allowed vlan all
+ESW1-CPE-BAT-A(config-if)#    exit
+ESW1-CPE-BAT-A(config)#
+ESW1-CPE-BAT-A(config)#interface fa1/15
+ESW1-CPE-BAT-A(config-if)#    switchport mode trunk
+ESW1-CPE-BAT-A(config-if)#    switchport trunk allowed vlan all
+ESW1-CPE-BAT-A(config-if)#    exit
+ESW1-CPE-BAT-A(config)#
+ESW1-CPE-BAT-A(config)#interface fa1/1
+ESW1-CPE-BAT-A(config-if)#    switchport mode access
+ESW1-CPE-BAT-A(config-if)#    switchport access vlan 10
+ESW1-CPE-BAT-A(config-if)#    description "port vlan teacher"
+ESW1-CPE-BAT-A(config-if)#    exit
+ESW1-CPE-BAT-A(config)#
+ESW1-CPE-BAT-A(config)#interface fa1/2
+ESW1-CPE-BAT-A(config-if)#    switchport mode access
+ESW1-CPE-BAT-A(config-if)#    switchport access vlan 20
+ESW1-CPE-BAT-A(config-if)#    description "port vlan student"
+ESW1-CPE-BAT-A(config-if)#    exit
+ESW1-CPE-BAT-A(config)#end
+ESW1-CPE-BAT-A#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_save_config*************************************************************
+* ESW1-CPE-BAT-A ** changed : True *********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+ESW1-CPE-BAT-A#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_send_config*************************************************************
+* R1-CPE-BAT-B ** changed : True ***********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#
+R3(config)#interface g3/0
+R3(config-if)#    encapsulation dot1Q
+                                ^
+% Invalid input detected at '^' marker.
+
+R3(config-if)#    description "**NO DESCRIPTION**"
+R3(config-if)#    ip address
+% Incomplete command.
+
+R3(config-if)#    exit
+R3(config)#
+R3(config)#interface g3/0.10
+R3(config-subif)#    encapsulation dot1Q 10
+R3(config-subif)#    description "Gateway for teacher vlan"
+R3(config-subif)#    ip address 172.16.30.253 255.255.255.0
+R3(config-subif)#    exit
+R3(config)#
+R3(config)#interface g3/0.20
+R3(config-subif)#    encapsulation dot1Q 20
+R3(config-subif)#    description "Gateway for student vlan"
+R3(config-subif)#    ip address 172.16.40.253 255.255.255.0
+R3(config-subif)#    exit
+R3(config)#end
+R3#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_save_config*************************************************************
+* R1-CPE-BAT-B ** changed : True ***********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+R3#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_send_config*************************************************************
+* R2-CPE-BAT-B ** changed : True ***********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R4(config)#
+R4(config)#interface g3/0
+R4(config-if)#    encapsulation dot1Q
+                                ^
+% Invalid input detected at '^' marker.
+
+R4(config-if)#    description "**NO DESCRIPTION**"
+R4(config-if)#    ip address
+% Incomplete command.
+
+R4(config-if)#    exit
+R4(config)#
+R4(config)#interface g3/0.10
+R4(config-subif)#    encapsulation dot1Q 10
+R4(config-subif)#    description "Gateway for teacher vlan"
+R4(config-subif)#    ip address 172.16.30.254 255.255.255.0
+R4(config-subif)#    exit
+R4(config)#
+R4(config)#interface g3/0.20
+R4(config-subif)#    encapsulation dot1Q 20
+R4(config-subif)#    description "Gateway for student vlan"
+R4(config-subif)#    ip address 172.16.40.254 255.255.255.0
+R4(config-subif)#    exit
+R4(config)#end
+R4#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_save_config*************************************************************
+* R2-CPE-BAT-B ** changed : True ***********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+R4#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_send_config*************************************************************
+* ESW1-CPE-BAT-B ** changed : True *********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+ESW2(config)#
+ESW2(config)#vlan 10
+ESW2(config-vlan)#    name teacher
+ESW2(config-vlan)#    exit
+ESW2(config)#vlan 20
+ESW2(config-vlan)#    name student
+ESW2(config-vlan)#    exit
+ESW2(config)#
+ESW2(config)#
+ESW2(config)#interface fa1/14
+ESW2(config-if)#    switchport mode trunk
+ESW2(config-if)#    switchport trunk allowed vlan all
+ESW2(config-if)#    exit
+ESW2(config)#
+ESW2(config)#interface fa1/15
+ESW2(config-if)#    switchport mode trunk
+ESW2(config-if)#    switchport trunk allowed vlan all
+ESW2(config-if)#    exit
+ESW2(config)#
+ESW2(config)#interface fa1/1
+ESW2(config-if)#    switchport mode access
+ESW2(config-if)#    switchport access vlan 10
+ESW2(config-if)#    description "port vlan teacher"
+ESW2(config-if)#    exit
+ESW2(config)#
+ESW2(config)#interface fa1/2
+ESW2(config-if)#    switchport mode access
+ESW2(config-if)#    switchport access vlan 20
+ESW2(config-if)#    description "port vlan student"
+ESW2(config-if)#    exit
+ESW2(config)#end
+ESW2#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_save_config*************************************************************
+* ESW1-CPE-BAT-B ** changed : True *********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+ESW2#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Avant shut interfaces
+netmiko_send_command************************************************************
+* R1-CPE-BAT-A ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface          Grp Pri Time  Own Pre State   Master addr     Group addr
+Gi2/0.10           10  100 3609       Y  Backup  172.16.10.254   172.16.10.252  
+Gi2/0.20           20  100 3609       Y  Backup  172.16.20.254   172.16.20.252  
+Gi2/0.99           99  100 3609       Y  Backup  172.16.100.126  172.16.100.124 
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-B ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface          Grp Pri Time  Own Pre State   Master addr     Group addr
+Gi3/0.10           10  100 3609       Y  Backup  172.16.30.254   172.16.30.252  
+Gi3/0.20           20  100 3609       Y  Backup  172.16.40.254   172.16.40.252  
+Gi3/0.99           99  100 3609       Y  Backup  172.16.100.190  172.16.100.188 
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-A ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface          Grp Pri Time  Own Pre State   Master addr     Group addr
+Gi2/0.10           10  110 3570       Y  Master  172.16.10.254   172.16.10.252  
+Gi2/0.20           20  110 3570       Y  Master  172.16.20.254   172.16.20.252  
+Gi2/0.99           99  110 3570       Y  Master  172.16.100.126  172.16.100.124 
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-B ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface          Grp Pri Time  Own Pre State   Master addr     Group addr
+Gi3/0.10           10  110 3570       Y  Master  172.16.30.254   172.16.30.252  
+Gi3/0.20           20  110 3570       Y  Master  172.16.40.254   172.16.40.252  
+Gi3/0.99           99  110 3570       Y  Master  172.16.100.190  172.16.100.188 
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+On shut les interface des master
+
+Après shut interfaces
+netmiko_send_command************************************************************
+* R1-CPE-BAT-A ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface          Grp Pri Time  Own Pre State   Master addr     Group addr
+Gi2/0.10           10  100 3609       Y  Master  172.16.10.253   172.16.10.252  
+Gi2/0.20           20  100 3609       Y  Master  172.16.20.253   172.16.20.252  
+Gi2/0.99           99  100 3609       Y  Master  172.16.100.125  172.16.100.124 
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-B ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface          Grp Pri Time  Own Pre State   Master addr     Group addr
+Gi3/0.10           10  100 3609       Y  Master  172.16.30.253   172.16.30.252  
+Gi3/0.20           20  100 3609       Y  Master  172.16.40.253   172.16.40.252  
+Gi3/0.99           99  100 3609       Y  Master  172.16.100.189  172.16.100.188 
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+
+a) Vérifiez que la communication entre le vlan 10 et 20 du bâtiment
+A est fonctionnelle après déploiement (même chose pour le
+bâtiment B)
+b) Vérifier l’état du HA entre les routeurs de chaque bâtiment : show
+vrrp brief. Le routeur R1 de chaque bâtiment doit être le backup
+et R2 doit être le master.
+c) Testez manuellement votre HA vrrp sur chaque bâtiment
+Faites vérifier par votre responsable pédagogique
+d) Testez automatiquement (via nornir) votre HA vrrp sur chaque
+bâtiment
+Faites vérifier par votre responsable pédagogique
+
+
+### 40) Créez une task à l’aide de nornir_netmiko ou nornir_napalm permettant d’annoncer les subnets des vlans 10 et 20 du bâtiment A et B sur le backbone OSPF. Les vlans de chaque bâtiment pourront ainsi communiquer ensemble.. Assurez-vous de générer automatiquement la configuration OSPF à l’aide de Jinja2 (Voir TP02).

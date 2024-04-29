@@ -146,13 +146,119 @@ def question_38(nr):
     pass
 
 def question_39(nr):
+    for host in nr.inventory.hosts:
+        filename = list(host.split("-"))
+        filename.insert(2, "LYON")
+        filename = "_".join(filename)
+        filename = f"config/{filename}.conf"
+    
+        with open(filename, 'r') as f:
+            config_commands = f.readlines()
+        result = nr.filter(device_name=host).run(task=netmiko_send_config, config_commands=config_commands) 
+        print_result(result)
+        result = nr.filter(device_name=host).run(task=netmiko_save_config) 
+        print_result(result)
     pass
 
 def question_39_d(nr):
+        
+    print('Avant shut interfaces')
+    router_hosts = nr.filter(device_type="router")
+    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
+    print_result(result)
+
+    print("On shut les interface des master\n")
+    commands_BAT_B = [
+        "interface GigabitEthernet3/0",  
+        "shutdown",
+    ]
+    commands_BAT_A = [
+        "interface GigabitEthernet2/0",  
+        "shutdown",
+    ]
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_send_config, config_commands=commands_BAT_A)
+    result = nr.filter(device_name="R2-CPE-BAT-B").run(task=netmiko_send_config, config_commands=commands_BAT_B)
+
+    print('Après shut interfaces')
+    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
+    print_result(result)
+
+    pass
+
+def render_network_config(template_name, data):
+    try:
+        template = env.get_template(template_name) 
+        print(template.render(data))
+        return template.render(data)
+    except:
+        print("Une erreur est parvenue")
+    pass
+
+
+
+def save_built_config(file_name, data):
+
+    import os
+    directory = os.path.dirname(file_name)
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    with open(file_name, 'w') as file:
+        file.write(data)
+    pass
+
+def load_yaml_data_from_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+            print(data)
+        return data
+    except FileNotFoundError as e:
+        print('Erreur retournée: File not found')
+    pass
+
+def create_config_ospf():
+    hosts = load_yaml_data_from_file(file_path = 'data/ospf_R1_CPE_BAT_A.yaml')
+    ospf_R1_CPE_BAT_A = render_network_config(template_name='ospf.j2', data=  hosts)
+    save_built_config('config/ospf_R1_CPE_BAT_A.conf', ospf_R1_CPE_BAT_A)
+
+    hosts1 = load_yaml_data_from_file(file_path = 'data/ospf_R2_CPE_BAT_A.yaml')
+    ospf_R2_CPE_BAT_A = render_network_config(template_name='ospf.j2', data=  hosts1)
+    save_built_config('config/ospf_R2_CPE_BAT_A.conf', ospf_R2_CPE_BAT_A)
+
+    hosts2 = load_yaml_data_from_file(file_path = 'data/ospf_R1_CPE_BAT_B.yaml')
+    ospf_R1_CPE_BAT_B = render_network_config(template_name='ospf.j2', data=  hosts2)
+    save_built_config('config/ospf_R1_CPE_BAT_B.conf', ospf_R1_CPE_BAT_B)
+
+    hosts3 = load_yaml_data_from_file(file_path = 'data/ospf_R2_CPE_BAT_B.yaml')
+    ospf_R2_CPE_BAT_B = render_network_config(template_name='ospf.j2', data=  hosts3)
+    save_built_config('config/ospf_R2_CPE_BAT_B.conf', ospf_R2_CPE_BAT_B)
     pass
 
 def question_40(nr):
+    create_config_ospf()
+    for host in nr.inventory.hosts:
+        filename = list(host.split("-"))
+        filename.insert(0, "ospf")
+        filename = "_".join(filename)
+        filename = f"config/{filename}.conf"
+        #print(filename)
+        #print(host)
+        if not os.path.isfile(filename):
+            print("Aucun fichier trouvé")
+            continue
+    
+        with open(filename, 'r') as f:
+            config_commands = f.readlines()
+        result = nr.filter(device_name=host).run(task=netmiko_send_config, config_commands=config_commands) 
+        print_result(result)
+        result = nr.filter(device_name=host).run(task=netmiko_save_config) 
+        print_result(result)
+    
+
     pass
+
     
 
 if __name__ == "__main__":
@@ -183,9 +289,9 @@ if __name__ == "__main__":
     #question_35(nr)
     #question_36(nr)
     #question_37(nr)
-    question_38(nr)
-    #question_39(nr)
-    #question_39_d(nr)
+    #question_38(nr)
+    # question_39(nr)
+    # question_39_d(nr)
 
-    #question_40(nr)
+    question_40(nr)
     pass
