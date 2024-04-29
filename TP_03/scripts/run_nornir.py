@@ -98,24 +98,51 @@ def question_30(nr):
     pass
 
 def question_32(nr):
+    router = nr.filter(device_type="router")
+    result = nr.run(task=napalm_cli, commands=["sh ip int br"])
+    print_result(result)
     pass
  
 def question_33(nr):
+    router_switch = nr.filter(device_type="router_switch")
+    result = nr.run(task=napalm_get, getters=["arp_table"])
+    print_result(result)
     pass
 
 def question_34(nr):
+    result = nr.filter(device_name="R1-CPE-BAT-A").run(task=napalm_configure, configuration="int lo1\nip address 1.1.1.1 255.255.255.255")
+    print_result(result)
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=napalm_configure, configuration="int lo1\nip address 2.2.2.2 255.255.255.255")
+    print_result(result)
+
     pass
+
 
 def question_35(nr):
+    result = nr.run(task=napalm_cli, commands=["wr"] ) 
+    print_result(result)
     pass
 
+
 def question_36(nr):
+    router = nr.filter(device_type="router")
+    result = nr.run(task=netmiko_send_command, command_string="sh ip int brief")
+    print_result(result)
+
     pass
 
 def question_37(nr):
+    result = nr.filter(device_name="R1-CPE-BAT-A").run(task=netmiko_send_config, config_commands=["int lo2","ip address 1.1.1.2 255.255.255.255"])
+    print_result(result)
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_send_config, config_commands=["int lo2","ip address 2.2.2.3 255.255.255.255"])
+    print_result(result)
     pass
 
 def question_38(nr):
+    result = nr.filter(device_name="R1-CPE-BAT-A").run(task=netmiko_save_config)
+    print_result(result)
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_save_config)
+    print_result(result)
     pass
 
 def question_39(nr):
@@ -148,15 +175,15 @@ if __name__ == "__main__":
     # question_27(nr)
     # question_28(nr)
     # question_29(nr)
-    question_30(nr)
+    # question_30(nr)
 
     #question_32(nr)
-    #question_33(nr)
+    # question_33(nr)
     #question_34(nr)
     #question_35(nr)
     #question_36(nr)
     #question_37(nr)
-    #question_38(nr)
+    question_38(nr)
     #question_39(nr)
     #question_39_d(nr)
 

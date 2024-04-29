@@ -549,5 +549,700 @@ from nornir_netmiko.tasks import netmiko_send_config, netmiko_send_command, netm
 
 ### 32) Développez une task permettant d’afficher l’état des interfaces de chaque routeur à l’aide de la fonction napalm_cli.
 
-result = nr.run(task=........., commands=["........."])
-print_result(result)
+```python
+def question_32(nr):
+    router = nr.filter(device_type="router")
+    result = nr.run(task=napalm_cli, commands=["sh ip int br"])
+    print_result(result)
+    pass
+```
+
+résultat : 
+
+```sh
+(reseau-etendu-6MQWliMz) cpe@cpe-VirtualBox:~/LEA/reseau-etendu/TP_03$ python3 -m scripts.run_nornir
+napalm_cli**********************************************************************
+* ESW1-CPE-BAT-A ** changed : False ********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'sh ip int br': 'Interface                  IP-Address      OK? Method '
+                  'Status                Protocol\n'
+                  'FastEthernet0/0            unassigned      YES NVRAM  '
+                  'up                    up      \n'
+                  'FastEthernet0/1            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'FastEthernet1/0            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/1            unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet1/2            unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet1/3            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/4            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/5            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/6            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/7            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/8            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/9            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/10           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/11           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/12           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/13           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/14           unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet1/15           unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet2/0            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Vlan1                      unassigned      YES NVRAM  '
+                  'up                    up      \n'
+                  'Vlan99                     172.16.100.123  YES NVRAM  '
+                  'up                    up      \n'
+                  'Loopback1                  unassigned      YES NVRAM  '
+                  'up                    up'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* ESW1-CPE-BAT-B ** changed : False ********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'sh ip int br': 'Interface                  IP-Address      OK? Method '
+                  'Status                Protocol\n'
+                  'FastEthernet0/0            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'FastEthernet0/1            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'FastEthernet1/0            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/1            unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet1/2            unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet1/3            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/4            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/5            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/6            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/7            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/8            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/9            unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/10           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/11           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/12           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/13           unassigned      YES unset  '
+                  'up                    down    \n'
+                  'FastEthernet1/14           unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet1/15           unassigned      YES unset  '
+                  'up                    up      \n'
+                  'FastEthernet2/0            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Vlan1                      unassigned      YES NVRAM  '
+                  'up                    up      \n'
+                  'Vlan99                     172.16.100.187  YES NVRAM  '
+                  'up                    up'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-A ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'sh ip int br': 'Interface                  IP-Address      OK? Method '
+                  'Status                Protocol\n'
+                  'FastEthernet0/0            172.16.100.62   YES NVRAM  '
+                  'up                    up      \n'
+                  'Serial1/0                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/1                  10.1.1.1        YES NVRAM  '
+                  'up                    up      \n'
+                  'Serial1/2                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/3                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'GigabitEthernet2/0         unassigned      YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet2/0.10      172.16.10.253   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet2/0.20      172.16.20.253   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet2/0.99      172.16.100.125  YES NVRAM  '
+                  'up                    up      \n'
+                  'Loopback1                  1.1.1.1         YES NVRAM  '
+                  'up                    up      \n'
+                  'Loopback2                  1.1.1.2         YES NVRAM  '
+                  'up                    up'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-B ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'sh ip int br': 'Interface                  IP-Address      OK? Method '
+                  'Status                Protocol\n'
+                  'FastEthernet0/0            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/0                  10.103.1.1      YES NVRAM  '
+                  'up                    down    \n'
+                  'Serial1/1                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/2                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/3                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial2/0                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial2/1                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial2/2                  10.1.5.2        YES NVRAM  '
+                  'up                    up      \n'
+                  'Serial2/3                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'GigabitEthernet3/0         unassigned      YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet3/0.10      172.16.30.253   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet3/0.20      172.16.40.253   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet3/0.99      172.16.100.189  YES NVRAM  '
+                  'up                    up'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-A ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'sh ip int br': 'Interface                  IP-Address      OK? Method '
+                  'Status                Protocol\n'
+                  'FastEthernet0/0            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/0                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/1                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/2                  10.1.2.1        YES NVRAM  '
+                  'up                    up      \n'
+                  'Serial1/3                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'GigabitEthernet2/0         unassigned      YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet2/0.10      172.16.10.254   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet2/0.20      172.16.20.254   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet2/0.99      172.16.100.126  YES NVRAM  '
+                  'up                    up      \n'
+                  'Loopback1                  2.2.2.2         YES NVRAM  '
+                  'up                    up      \n'
+                  'Loopback2                  2.2.2.3         YES NVRAM  '
+                  'up                    up'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-B ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'sh ip int br': 'Interface                  IP-Address      OK? Method '
+                  'Status                Protocol\n'
+                  'FastEthernet0/0            unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/0                  10.102.1.1      YES NVRAM  '
+                  'up                    down    \n'
+                  'Serial1/1                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/2                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial1/3                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial2/0                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial2/1                  10.1.4.2        YES NVRAM  '
+                  'up                    up      \n'
+                  'Serial2/2                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'Serial2/3                  unassigned      YES NVRAM  '
+                  'administratively down down    \n'
+                  'GigabitEthernet3/0         unassigned      YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet3/0.10      172.16.30.254   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet3/0.20      172.16.40.254   YES NVRAM  '
+                  'up                    up      \n'
+                  'GigabitEthernet3/0.99      172.16.100.190  YES NVRAM  '
+                  'up                    up'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+### 33) Développez une task permettant d’afficher la table arp de chaque switch référencé dans l’inventory. Utilisez la fonction napalm_get pour cela.
+
+
+```python
+def question_33(nr):
+    router_switch = nr.filter(device_type="router_switch")
+    result = nr.run(task=napalm_get, getters=["arp_table"])
+    print_result(result)
+    pass
+```
+
+Résulat : 
+```sh
+(reseau-etendu-6MQWliMz) cpe@cpe-VirtualBox:~/LEA/reseau-etendu/TP_03$ python3 -m scripts.run_nornir
+napalm_get**********************************************************************
+* ESW1-CPE-BAT-A ** changed : False ********************************************
+vvvv napalm_get ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'arp_table': [ { 'age': 1.0,
+                   'interface': 'Vlan99',
+                   'ip': '172.16.100.2',
+                   'mac': '00:00:5E:00:01:63'},
+                 { 'age': -1.0,
+                   'interface': 'Vlan99',
+                   'ip': '172.16.100.123',
+                   'mac': 'C2:02:0F:B5:00:00'}]}
+^^^^ END napalm_get ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* ESW1-CPE-BAT-B ** changed : False ********************************************
+vvvv napalm_get ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'arp_table': [ { 'age': 1.0,
+                   'interface': 'Vlan99',
+                   'ip': '172.16.100.2',
+                   'mac': '00:00:5E:00:01:63'},
+                 { 'age': -1.0,
+                   'interface': 'Vlan99',
+                   'ip': '172.16.100.187',
+                   'mac': 'C2:04:12:25:00:00'}]}
+^^^^ END napalm_get ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-A ** changed : False **********************************************
+vvvv napalm_get ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'arp_table': [ { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.10',
+                   'ip': '172.16.10.253',
+                   'mac': 'CA:01:69:6A:00:38'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet2/0.10',
+                   'ip': '172.16.10.254',
+                   'mac': 'CA:03:69:82:00:38'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.20',
+                   'ip': '172.16.20.253',
+                   'mac': 'CA:01:69:6A:00:38'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet2/0.20',
+                   'ip': '172.16.20.254',
+                   'mac': 'CA:03:69:82:00:38'},
+                 { 'age': 3.0,
+                   'interface': 'FastEthernet0/0',
+                   'ip': '172.16.100.2',
+                   'mac': '08:00:27:F6:B8:64'},
+                 { 'age': -1.0,
+                   'interface': 'FastEthernet0/0',
+                   'ip': '172.16.100.62',
+                   'mac': 'CA:01:69:6A:00:00'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet2/0.99',
+                   'ip': '172.16.100.123',
+                   'mac': 'C2:02:0F:B5:00:00'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.99',
+                   'ip': '172.16.100.125',
+                   'mac': 'CA:01:69:6A:00:38'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet2/0.99',
+                   'ip': '172.16.100.126',
+                   'mac': 'CA:03:69:82:00:38'}]}
+^^^^ END napalm_get ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-B ** changed : False **********************************************
+vvvv napalm_get ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'arp_table': [ { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.10',
+                   'ip': '172.16.30.253',
+                   'mac': 'CA:06:69:A0:00:54'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet3/0.10',
+                   'ip': '172.16.30.254',
+                   'mac': 'CA:07:69:B7:00:54'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.20',
+                   'ip': '172.16.40.253',
+                   'mac': 'CA:06:69:A0:00:54'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet3/0.20',
+                   'ip': '172.16.40.254',
+                   'mac': 'CA:07:69:B7:00:54'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet3/0.99',
+                   'ip': '172.16.100.187',
+                   'mac': 'C2:04:12:25:00:00'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.99',
+                   'ip': '172.16.100.189',
+                   'mac': 'CA:06:69:A0:00:54'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet3/0.99',
+                   'ip': '172.16.100.190',
+                   'mac': 'CA:07:69:B7:00:54'}]}
+^^^^ END napalm_get ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-A ** changed : False **********************************************
+vvvv napalm_get ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'arp_table': [ { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.10',
+                   'ip': '172.16.10.252',
+                   'mac': '00:00:5E:00:01:0A'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet2/0.10',
+                   'ip': '172.16.10.253',
+                   'mac': 'CA:01:69:6A:00:38'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.10',
+                   'ip': '172.16.10.254',
+                   'mac': 'CA:03:69:82:00:38'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.20',
+                   'ip': '172.16.20.252',
+                   'mac': '00:00:5E:00:01:14'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet2/0.20',
+                   'ip': '172.16.20.253',
+                   'mac': 'CA:01:69:6A:00:38'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.20',
+                   'ip': '172.16.20.254',
+                   'mac': 'CA:03:69:82:00:38'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet2/0.99',
+                   'ip': '172.16.100.123',
+                   'mac': 'C2:02:0F:B5:00:00'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.99',
+                   'ip': '172.16.100.124',
+                   'mac': '00:00:5E:00:01:63'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet2/0.99',
+                   'ip': '172.16.100.125',
+                   'mac': 'CA:01:69:6A:00:38'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet2/0.99',
+                   'ip': '172.16.100.126',
+                   'mac': 'CA:03:69:82:00:38'}]}
+^^^^ END napalm_get ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-B ** changed : False **********************************************
+vvvv napalm_get ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{ 'arp_table': [ { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.10',
+                   'ip': '172.16.30.252',
+                   'mac': '00:00:5E:00:01:0A'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet3/0.10',
+                   'ip': '172.16.30.253',
+                   'mac': 'CA:06:69:A0:00:54'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.10',
+                   'ip': '172.16.30.254',
+                   'mac': 'CA:07:69:B7:00:54'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.20',
+                   'ip': '172.16.40.252',
+                   'mac': '00:00:5E:00:01:14'},
+                 { 'age': 52.0,
+                   'interface': 'GigabitEthernet3/0.20',
+                   'ip': '172.16.40.253',
+                   'mac': 'CA:06:69:A0:00:54'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.20',
+                   'ip': '172.16.40.254',
+                   'mac': 'CA:07:69:B7:00:54'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet3/0.99',
+                   'ip': '172.16.100.187',
+                   'mac': 'C2:04:12:25:00:00'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.99',
+                   'ip': '172.16.100.188',
+                   'mac': '00:00:5E:00:01:63'},
+                 { 'age': 3.0,
+                   'interface': 'GigabitEthernet3/0.99',
+                   'ip': '172.16.100.189',
+                   'mac': 'CA:06:69:A0:00:54'},
+                 { 'age': -1.0,
+                   'interface': 'GigabitEthernet3/0.99',
+                   'ip': '172.16.100.190',
+                   'mac': 'CA:07:69:B7:00:54'}]}
+^^^^ END napalm_get ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+### 34) Développez deux tasks permettant de créer une interface de loopback sur les routeurs R1 et R2 du bâtiment A . (Une task par routeur) à l’aide de la task napalm_configure
+
+interface loopback 1 R1: 1.1.1.1 255.255.255.255
+interface loopback 1 R2: 2.2.2.2 255.255.255.255
+
+```python
+def question_34(nr):
+    result = nr.filter(device_name="R1-CPE-BAT-A").run(task=napalm_configure, configuration="int lo1\nip address 1.1.1.1 255.255.255.255")
+    print_result(result)
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=napalm_configure, configuration="int lo1\nip address 2.2.2.2 255.255.255.255")
+    print_result(result)
+
+    pass
+```
+
+Résultat : 
+
+```sh
+napalm_configure****************************************************************
+* R1-CPE-BAT-A ** changed : True ***********************************************
+vvvv napalm_configure ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
++int lo1
++ip address 1.1.1.1 255.255.255.255end
+^^^^ END napalm_configure ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+napalm_configure****************************************************************
+* R2-CPE-BAT-A ** changed : True ***********************************************
+vvvv napalm_configure ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
++int lo1
++ip address 2.2.2.2 255.255.255.255end
+^^^^ END napalm_configure ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+### 35) Développez une fonction contenant une task permettant de sauvegarder la running-config sur les équipements (routeurs / switchs) depuis napalm_cli.
+
+```python
+def question_35(nr):
+    result = nr.run(task=napalm_cli, commands=["wr"] ) 
+    print_result(result)
+    pass
+```
+
+Résultat : 
+```sh
+(reseau-etendu-6MQWliMz) cpe@cpe-VirtualBox:~/LEA/reseau-etendu/TP_03$ python3 -m scripts.run_nornir
+napalm_cli**********************************************************************
+* ESW1-CPE-BAT-A ** changed : False ********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{'wr': 'Building configuration...\n[OK]'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* ESW1-CPE-BAT-B ** changed : False ********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{'wr': 'Building configuration...\n[OK]'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-A ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{'wr': 'Building configuration...\n[OK]'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-B ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{'wr': 'Building configuration...\n[OK]'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-A ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{'wr': 'Building configuration...\n[OK]'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-B ** changed : False **********************************************
+vvvv napalm_cli ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+{'wr': 'Building configuration...\n[OK]'}
+^^^^ END napalm_cli ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+### 36) Développez une fonction permettant d’afficher l’état des interfaces de chaque routeur à l’aide de la task netmiko_send_command.
+
+```python
+def question_36(nr):
+    router = nr.filter(device_type="router")
+    result = nr.run(task=netmiko_send_command, command_string="sh ip int brief")
+    print_result(result)
+
+    pass
+```
+
+Résultat : 
+
+```sh
+
+(reseau-etendu-6MQWliMz) cpe@cpe-VirtualBox:~/LEA/reseau-etendu/TP_03$ python3 -m scripts.run_nornir
+netmiko_send_command************************************************************
+* ESW1-CPE-BAT-A ** changed : False ********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES NVRAM  up                    up      
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down    
+FastEthernet1/0            unassigned      YES unset  up                    down    
+FastEthernet1/1            unassigned      YES unset  up                    up      
+FastEthernet1/2            unassigned      YES unset  up                    up      
+FastEthernet1/3            unassigned      YES unset  up                    down    
+FastEthernet1/4            unassigned      YES unset  up                    down    
+FastEthernet1/5            unassigned      YES unset  up                    down    
+FastEthernet1/6            unassigned      YES unset  up                    down    
+FastEthernet1/7            unassigned      YES unset  up                    down    
+FastEthernet1/8            unassigned      YES unset  up                    down    
+FastEthernet1/9            unassigned      YES unset  up                    down    
+FastEthernet1/10           unassigned      YES unset  up                    down    
+FastEthernet1/11           unassigned      YES unset  up                    down    
+FastEthernet1/12           unassigned      YES unset  up                    down    
+FastEthernet1/13           unassigned      YES unset  up                    down    
+FastEthernet1/14           unassigned      YES unset  up                    up      
+FastEthernet1/15           unassigned      YES unset  up                    up      
+FastEthernet2/0            unassigned      YES NVRAM  administratively down down    
+Vlan1                      unassigned      YES NVRAM  up                    up      
+Vlan99                     172.16.100.123  YES NVRAM  up                    up      
+Loopback1                  unassigned      YES NVRAM  up                    up      
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* ESW1-CPE-BAT-B ** changed : False ********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES NVRAM  administratively down down    
+FastEthernet0/1            unassigned      YES NVRAM  administratively down down    
+FastEthernet1/0            unassigned      YES unset  up                    down    
+FastEthernet1/1            unassigned      YES unset  up                    up      
+FastEthernet1/2            unassigned      YES unset  up                    up      
+FastEthernet1/3            unassigned      YES unset  up                    down    
+FastEthernet1/4            unassigned      YES unset  up                    down    
+FastEthernet1/5            unassigned      YES unset  up                    down    
+FastEthernet1/6            unassigned      YES unset  up                    down    
+FastEthernet1/7            unassigned      YES unset  up                    down    
+FastEthernet1/8            unassigned      YES unset  up                    down    
+FastEthernet1/9            unassigned      YES unset  up                    down    
+FastEthernet1/10           unassigned      YES unset  up                    down    
+FastEthernet1/11           unassigned      YES unset  up                    down    
+FastEthernet1/12           unassigned      YES unset  up                    down    
+FastEthernet1/13           unassigned      YES unset  up                    down    
+FastEthernet1/14           unassigned      YES unset  up                    up      
+FastEthernet1/15           unassigned      YES unset  up                    up      
+FastEthernet2/0            unassigned      YES NVRAM  administratively down down    
+Vlan1                      unassigned      YES NVRAM  up                    up      
+Vlan99                     172.16.100.187  YES NVRAM  up                    up      
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-A ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            172.16.100.62   YES NVRAM  up                    up      
+Serial1/0                  unassigned      YES NVRAM  administratively down down    
+Serial1/1                  10.1.1.1        YES NVRAM  up                    up      
+Serial1/2                  unassigned      YES NVRAM  administratively down down    
+Serial1/3                  unassigned      YES NVRAM  administratively down down    
+GigabitEthernet2/0         unassigned      YES NVRAM  up                    up      
+GigabitEthernet2/0.10      172.16.10.253   YES NVRAM  up                    up      
+GigabitEthernet2/0.20      172.16.20.253   YES NVRAM  up                    up      
+GigabitEthernet2/0.99      172.16.100.125  YES NVRAM  up                    up      
+Loopback1                  1.1.1.1         YES TFTP   up                    up      
+Loopback2                  1.1.1.2         YES NVRAM  up                    up      
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R1-CPE-BAT-B ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES NVRAM  administratively down down    
+Serial1/0                  10.103.1.1      YES NVRAM  up                    down    
+Serial1/1                  unassigned      YES NVRAM  administratively down down    
+Serial1/2                  unassigned      YES NVRAM  administratively down down    
+Serial1/3                  unassigned      YES NVRAM  administratively down down    
+Serial2/0                  unassigned      YES NVRAM  administratively down down    
+Serial2/1                  unassigned      YES NVRAM  administratively down down    
+Serial2/2                  10.1.5.2        YES NVRAM  up                    up      
+Serial2/3                  unassigned      YES NVRAM  administratively down down    
+GigabitEthernet3/0         unassigned      YES NVRAM  up                    up      
+GigabitEthernet3/0.10      172.16.30.253   YES NVRAM  up                    up      
+GigabitEthernet3/0.20      172.16.40.253   YES NVRAM  up                    up      
+GigabitEthernet3/0.99      172.16.100.189  YES NVRAM  up                    up      
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-A ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES NVRAM  administratively down down    
+Serial1/0                  unassigned      YES NVRAM  administratively down down    
+Serial1/1                  unassigned      YES NVRAM  administratively down down    
+Serial1/2                  10.1.2.1        YES NVRAM  up                    up      
+Serial1/3                  unassigned      YES NVRAM  administratively down down    
+GigabitEthernet2/0         unassigned      YES NVRAM  up                    up      
+GigabitEthernet2/0.10      172.16.10.254   YES NVRAM  up                    up      
+GigabitEthernet2/0.20      172.16.20.254   YES NVRAM  up                    up      
+GigabitEthernet2/0.99      172.16.100.126  YES NVRAM  up                    up      
+Loopback1                  2.2.2.2         YES TFTP   up                    up      
+Loopback2                  2.2.2.3         YES NVRAM  up                    up      
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* R2-CPE-BAT-B ** changed : False **********************************************
+vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            unassigned      YES NVRAM  administratively down down    
+Serial1/0                  10.102.1.1      YES NVRAM  up                    down    
+Serial1/1                  unassigned      YES NVRAM  administratively down down    
+Serial1/2                  unassigned      YES NVRAM  administratively down down    
+Serial1/3                  unassigned      YES NVRAM  administratively down down    
+Serial2/0                  unassigned      YES NVRAM  administratively down down    
+Serial2/1                  10.1.4.2        YES NVRAM  up                    up      
+Serial2/2                  unassigned      YES NVRAM  administratively down down    
+Serial2/3                  unassigned      YES NVRAM  administratively down down    
+GigabitEthernet3/0         unassigned      YES NVRAM  up                    up      
+GigabitEthernet3/0.10      172.16.30.254   YES NVRAM  up                    up      
+GigabitEthernet3/0.20      172.16.40.254   YES NVRAM  up                    up      
+GigabitEthernet3/0.99      172.16.100.190  YES NVRAM  up                    up      
+^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+```
+
+### 37) Développez une fonction permettant de créer une interface de loopback 2 sur les routeurs R1 et R2 du bâtiment A . (Une task par routeur) en utilisant la task netmiko_send_config
+
+interface loopback 2 R1: 1.1.1.2 255.255.255.255
+interface loopback 2 R2: 2.2.2.3 255.255.255.255
+
+```python
+def question_37(nr):
+    result = nr.filter(device_name="R1-CPE-BAT-A").run(task=netmiko_send_config, config_commands=["int lo2","ip address 1.1.1.2 255.255.255.255"])
+    print_result(result)
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_send_config, config_commands=["int lo2","ip address 2.2.2.3 255.255.255.255"])
+    print_result(result)
+    pass
+```
+Résultat : 
+
+```sh
+netmiko_send_config*************************************************************
+* R1-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1-CPE-BAT-A(config)#int lo2
+R1-CPE-BAT-A(config-if)#ip address 1.1.1.2 255.255.255.255
+R1-CPE-BAT-A(config-if)#end
+R1-CPE-BAT-A#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_send_config*************************************************************
+* R2-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R2-CPE-BAT-A(config)#int lo2
+R2-CPE-BAT-A(config-if)#ip address 2.2.2.3 255.255.255.255
+R2-CPE-BAT-A(config-if)#end
+R2-CPE-BAT-A#
+^^^^ END netmiko_send_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+### 38) Développez une fonction contenant une task permettant de sauvegarder la running-config de la question précédente à l’aide de la task netmiko_save_config
+
+```python
+def question_38(nr):
+    result = nr.filter(device_name="R1-CPE-BAT-A").run(task=netmiko_save_config)
+    print_result(result)
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_save_config)
+    print_result(result)
+    pass
+```
+
+Résultat : 
+
+```sh
+netmiko_save_config*************************************************************
+* R1-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+R1-CPE-BAT-A#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+netmiko_save_config*************************************************************
+* R2-CPE-BAT-A ** changed : True ***********************************************
+vvvv netmiko_save_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
+write mem
+Building configuration...
+[OK]
+R2-CPE-BAT-A#
+^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
