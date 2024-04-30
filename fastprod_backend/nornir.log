@@ -1,0 +1,84 @@
+2024-04-30 09:07:53,377 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces']} on 1 hosts
+2024-04-30 09:09:02,585 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces']} on 1 hosts
+2024-04-30 09:09:23,348 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces']} on 1 hosts
+2024-04-30 09:10:20,141 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces']} on 1 hosts
+2024-04-30 09:10:46,103 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces']} on 1 hosts
+2024-04-30 09:15:49,738 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces']} on 1 hosts
+2024-04-30 09:39:45,589 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:45:55,788 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:46:48,196 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:47:05,920 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:49:11,601 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:50:09,804 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:50:39,878 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:51:48,116 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:52:28,356 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:53:40,383 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:56:31,268 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:56:40,211 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 09:57:12,810 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 10:11:37,602 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 10:14:20,764 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_facts']} on 1 hosts
+2024-04-30 10:46:01,671 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 10:49:31,275 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 11:08:53,099 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 11:10:46,002 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['show ip route']} on 1 hosts
+2024-04-30 11:14:03,535 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['show ip route']} on 1 hosts
+2024-04-30 11:14:03,626 -  nornir.core -     INFO -        run() - Running task 'napalm_cli' with args {'commands': ['show ip int br']} on 1 hosts
+2024-04-30 11:24:03,898 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_config' with args {'config_commands': [['interface loopback 8', 'ip add 8.8.8.8 255.255.255.255', 'description created_from_postman']]} on 1 hosts
+2024-04-30 11:24:04,667 - nornir.core.task -    ERROR -      start() - Host 'R1-CPE-BAT-A': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 38, in netmiko_send_config
+    result = net_connect.send_config_set(config_commands=config_commands, **kwargs)
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/netmiko/base_connection.py", line 110, in wrapper_decorator
+    return_val = func(self, *args, **kwargs)
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/netmiko/base_connection.py", line 2276, in send_config_set
+    [True for cmd in config_commands_tmp if re.search(bypass_commands, cmd)]
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/netmiko/base_connection.py", line 2276, in <listcomp>
+    [True for cmd in config_commands_tmp if re.search(bypass_commands, cmd)]
+  File "/usr/lib/python3.8/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+
+2024-04-30 11:35:38,155 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_config' with args {'config_commands': [['interface loopback 8', 'ip add 8.8.8.8 255.255.255.255', 'description created_from_postman']]} on 1 hosts
+2024-04-30 11:35:38,954 - nornir.core.task -    ERROR -      start() - Host 'R1-CPE-BAT-A': task 'netmiko_send_config' failed with traceback:
+Traceback (most recent call last):
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/nornir/core/task.py", line 99, in start
+    r = self.task(self, **self.params)
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/nornir_netmiko/tasks/netmiko_send_config.py", line 38, in netmiko_send_config
+    result = net_connect.send_config_set(config_commands=config_commands, **kwargs)
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/netmiko/base_connection.py", line 110, in wrapper_decorator
+    return_val = func(self, *args, **kwargs)
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/netmiko/base_connection.py", line 2276, in send_config_set
+    [True for cmd in config_commands_tmp if re.search(bypass_commands, cmd)]
+  File "/home/cpe/.local/share/virtualenvs/workspace-lQQg3_Bq/lib/python3.8/site-packages/netmiko/base_connection.py", line 2276, in <listcomp>
+    [True for cmd in config_commands_tmp if re.search(bypass_commands, cmd)]
+  File "/usr/lib/python3.8/re.py", line 201, in search
+    return _compile(pattern, flags).search(string)
+TypeError: expected string or bytes-like object
+
+2024-04-30 11:36:21,517 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_config' with args {'config_commands': ['interface loopback 8', 'ip add 8.8.8.8 255.255.255.255', 'description created_from_postman']} on 1 hosts
+2024-04-30 13:36:52,513 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_config' with args {'config_file': 'fastprod/upload_files/R1-CPE-BAT-A_loopback.conf'} on 1 hosts
+2024-04-30 13:39:18,259 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_config' with args {'config_commands': ['interface loopback 8', 'ip add 8.8.8.8 255.255.255.255', 'description created_from_postman']} on 1 hosts
+2024-04-30 13:39:30,322 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_config' with args {'config_file': 'fastprod/upload_files/R1-CPE-BAT-A_loopback.conf'} on 1 hosts
+2024-04-30 14:41:42,473 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:43:10,236 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:43:47,170 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:44:15,719 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:47:47,402 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:48:26,145 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:51:02,238 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:51:19,883 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 14:59:22,523 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:02:32,676 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:05:12,122 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:05:55,687 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:06:40,451 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:06:56,521 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:07:54,391 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:20:48,318 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_config']} on 1 hosts
+2024-04-30 15:59:26,981 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_facts']} on 1 hosts
+2024-04-30 15:59:26,990 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts
+2024-04-30 16:02:22,140 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['get_interfaces_ip']} on 1 hosts

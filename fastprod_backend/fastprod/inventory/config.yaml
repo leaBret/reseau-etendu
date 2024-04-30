@@ -1,0 +1,11 @@
+inventory:
+  plugin: SimpleInventory
+  options:
+    host_file: "fastprod/inventory/hosts.yaml"
+    group_file: "fastprod/inventory/groups.yaml"
+    defaults_file: "fastprod/inventory/defaults.yaml"
+runner:
+  plugin: threaded
+  options:
+    num_workers: 20
+    

@@ -1,0 +1,67 @@
+ESW1-CPE-BAT-A:
+  data:
+    building: A
+    device_model: C3725
+    device_name: ESW1-CPE-BAT-A
+    device_type: router_switch
+    locality: lyon
+  groups:
+  - ios
+  hostname: 172.16.100.123
+  port: 22
+ESW1-CPE-BAT-B:
+  data:
+    building: B
+    device_model: C3725
+    device_name: ESW1-CPE-BAT-B
+    device_type: router_switch
+    locality: lyon
+  groups:
+  - ios
+  hostname: 172.16.100.187
+  port: 22
+R1-CPE-BAT-A:
+  data:
+    building: A
+    device_model: C7200
+    device_name: R1-CPE-BAT-A
+    device_type: router
+    locality: lyon
+    room: '001'
+  groups:
+  - ios
+  hostname: 172.16.100.125
+  port: 22
+R1-CPE-BAT-B:
+  data:
+    building: B
+    device_model: C7200
+    device_name: R1-CPE-BAT-B
+    device_type: router
+    locality: lyon
+  groups:
+  - ios
+  hostname: 172.16.100.189
+  port: 22
+R2-CPE-BAT-A:
+  data:
+    building: A
+    device_model: C7200
+    device_name: R2-CPE-BAT-A
+    device_type: router
+    locality: lyon
+  groups:
+  - ios
+  hostname: 172.16.100.126
+  port: 22
+R2-CPE-BAT-B:
+  data:
+    building: B
+    device_model: C7200
+    device_name: R2-CPE-BAT-B
+    device_type: router
+    locality: lyon
+  groups:
+  - ios
+  hostname: 172.16.100.190
+  port: 22
