@@ -1255,7 +1255,6 @@ def create_config_cpe_lyon_batA():
    
     config = {}
 
-    print("######### R1_CPE_LYON_BAT_A")
     r1_data_batA = load_json_data_from_file(file_path='data/R1_CPE_LYON_BAT_A.json')
     r1_config_batA = render_network_config(template_name='vlan_router.j2', data=r1_data_batA)
     r1_vrrp_config_batA  = render_network_config(template_name='vrrp_router.j2', data=r1_data_batA)
@@ -1263,12 +1262,10 @@ def create_config_cpe_lyon_batA():
     r1 = r1_config_batA + "\n\n" + r1_vrrp_config_batA
     config['r1'] = r1
 
-    print("######### ESW1_CPE_LYON_BAT_A")
     esw1_data_batA = load_json_data_from_file(file_path='data/ESW1_CPE_LYON_BAT_A.json')
     esw1 = render_network_config(template_name='vlan_switch.j2', data=esw1_data_batA)
     config['esw1'] = esw1
 
-    print("######### R2_CPE_LYON_BAT_A")
     r2_data_batA = load_json_data_from_file(file_path='data/R2_CPE_LYON_BAT_A.json')
     r2_config_batA = render_network_config(template_name='vlan_router.j2', data=r2_data_batA)
     r2_vrrp_config_batA = render_network_config(template_name='vrrp_router.j2', data=r2_data_batA)
@@ -1282,7 +1279,6 @@ def create_config_cpe_lyon_batA():
 def create_config_cpe_lyon_batB():
     config = {}
 
-    print("######### R1_CPE_LYON_BAT_B")
     r1_data_batB = load_json_data_from_file(file_path='data/R1_CPE_LYON_BAT_B.json')
     r1_config_batB = render_network_config(template_name='vlan_router.j2', data=r1_data_batB)
     r1_config_batB = render_network_config(template_name='vlan_router.j2', data=r1_data_batB)
@@ -1291,12 +1287,10 @@ def create_config_cpe_lyon_batB():
     r1 = r1_config_batB + "\n\n" + r1_vrrp_config_batB
     config['r1'] = r1
 
-    print("######### ESW1_CPE_LYON_BAT_B")
     esw1_data_batB = load_json_data_from_file(file_path='data/ESW1_CPE_LYON_BAT_B.json')
     esw1 = render_network_config(template_name='vlan_switch.j2', data=esw1_data_batB)
     config['esw1'] = esw1
 
-    print("######### R2_CPE_LYON_BAT_B")
     r2_data_batB = load_json_data_from_file(file_path='data/R2_CPE_LYON_BAT_B.json')
     r2_config_batB = render_network_config(template_name='vlan_router.j2', data=r2_data_batB)
     r2_vrrp_config_batB = render_network_config(template_name='vrrp_router.j2', data=r2_data_batB)
@@ -1325,36 +1319,10 @@ def question_39(nr):
         result = nr.filter(device_name=host).run(task=netmiko_save_config) 
         print_result(result)
     pass
-
-def question_39_d(nr):
-        
-    print('Avant shut interfaces')
-    router_hosts = nr.filter(device_type="router")
-    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
-    print_result(result)
-
-    print("On shut les interface des master\n")
-    commands_BAT_B = [
-        "interface GigabitEthernet3/0",  
-        "shutdown",
-    ]
-    commands_BAT_A = [
-        "interface GigabitEthernet2/0",  
-        "shutdown",
-    ]
-    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_send_config, config_commands=commands_BAT_A)
-    result = nr.filter(device_name="R2-CPE-BAT-B").run(task=netmiko_send_config, config_commands=commands_BAT_B)
-
-    print('Après shut interfaces')
-    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
-    print_result(result)
-
-    pass
 ```
 
 résultat : 
 ```sh
-cpe@cpe-VirtualBox:~/LEA/reseau-etendu/reseau-etendu/TP_03$ python3 -m scripts.run_nornir
 netmiko_send_config*************************************************************
 * R1-CPE-BAT-A ** changed : True ***********************************************
 vvvv netmiko_send_config ** changed : True vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
@@ -1587,7 +1555,42 @@ Building configuration...
 [OK]
 ESW2#
 ^^^^ END netmiko_save_config ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Avant shut interfaces
+```
+
+
+#### a) Vérifiez que la communication entre le vlan 10 et 20 du bâtiment A est fonctionnelle après déploiement (même chose pour le bâtiment B)
+Ça marche 
+#### b) Vérifier l’état du HA entre les routeurs de chaque bâtiment : show vrrp brief. Le routeur R1 de chaque bâtiment doit être le backup et R2 doit être le master.
+Ça marche 
+#### c) Testez manuellement votre HA vrrp sur chaque bâtiment
+Ça marche 
+#### d) Testez automatiquement (via nornir) votre HA vrrp sur chaque bâtiment
+
+```python
+def question_39_d(nr):
+        
+    router_hosts = nr.filter(device_type="router")
+    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
+    print_result(result)
+
+    commands_BAT_B = [
+        "interface GigabitEthernet3/0",  
+        "shutdown",
+    ]
+    commands_BAT_A = [
+        "interface GigabitEthernet2/0",  
+        "shutdown",
+    ]
+    result = nr.filter(device_name="R2-CPE-BAT-A").run(task=netmiko_send_config, config_commands=commands_BAT_A)
+    result = nr.filter(device_name="R2-CPE-BAT-B").run(task=netmiko_send_config, config_commands=commands_BAT_B)
+
+    result = router_hosts.run(task=netmiko_send_command, command_string="show vrrp brief")
+    print_result(result)
+    pass
+```
+
+Résultat : 
+```sh
 netmiko_send_command************************************************************
 * R1-CPE-BAT-A ** changed : False **********************************************
 vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
@@ -1617,9 +1620,7 @@ Gi3/0.10           10  110 3570       Y  Master  172.16.30.254   172.16.30.252
 Gi3/0.20           20  110 3570       Y  Master  172.16.40.254   172.16.40.252  
 Gi3/0.99           99  110 3570       Y  Master  172.16.100.190  172.16.100.188 
 ^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-On shut les interface des master
 
-Après shut interfaces
 netmiko_send_command************************************************************
 * R1-CPE-BAT-A ** changed : False **********************************************
 vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
@@ -1636,19 +1637,4 @@ Gi3/0.20           20  100 3609       Y  Master  172.16.40.253   172.16.40.252
 Gi3/0.99           99  100 3609       Y  Master  172.16.100.189  172.16.100.188 
 ^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
-
-
-a) Vérifiez que la communication entre le vlan 10 et 20 du bâtiment
-A est fonctionnelle après déploiement (même chose pour le
-bâtiment B)
-b) Vérifier l’état du HA entre les routeurs de chaque bâtiment : show
-vrrp brief. Le routeur R1 de chaque bâtiment doit être le backup
-et R2 doit être le master.
-c) Testez manuellement votre HA vrrp sur chaque bâtiment
-Faites vérifier par votre responsable pédagogique
-d) Testez automatiquement (via nornir) votre HA vrrp sur chaque
-bâtiment
-Faites vérifier par votre responsable pédagogique
-
-
 ### 40) Créez une task à l’aide de nornir_netmiko ou nornir_napalm permettant d’annoncer les subnets des vlans 10 et 20 du bâtiment A et B sur le backbone OSPF. Les vlans de chaque bâtiment pourront ainsi communiquer ensemble.. Assurez-vous de générer automatiquement la configuration OSPF à l’aide de Jinja2 (Voir TP02).
